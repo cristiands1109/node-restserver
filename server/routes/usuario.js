@@ -6,13 +6,23 @@ const _ = require('underscore');
 
 //Usuario con mayusculas al principio hace referencia al modelo Usuario 
 const Usuario = require('../models/usuario');
+const { verificaToken, verificaADMIN_ROLE } = require('../middlewares/autenticacion');
+
+// express
 const app = express();
 
 //===================================================================//
 //====================OBTENER USUARIOs DE BD=========================//
 //===================================================================//
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificaToken, (req, res) => {
+
+    /**para prueba */
+    // return res.json({
+    //     usuario: req.usuario,
+    //     nombre: req.usuario.nombre,
+    //     email: req.usuario.email
+    // });
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -52,9 +62,8 @@ app.get('/usuario', function(req, res) {
 //=================CREAR UN USUARIO DE BD=======================//
 //===================================================================//
 
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [verificaToken, verificaADMIN_ROLE], (req, res) => {
     let body = req.body;
-
 
     // MODELO
     // usuario con minusculas es una variable creada que tiene 
@@ -91,7 +100,8 @@ app.post('/usuario', function(req, res) {
 //=================ACTUALIZAR UN USUARIO DE BD=======================//
 //===================================================================//
 
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificaToken, verificaADMIN_ROLE], (req, res) => {
+
 
 
     let id = req.params.id;
@@ -122,7 +132,7 @@ app.put('/usuario/:id', function(req, res) {
 //====================ELIMINAR UN USUARIO DE BD======================//
 //===================================================================//
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', verificaToken, (req, res) => {
 
     let id = req.params.id;
     let cambiarEstado = {
@@ -161,7 +171,7 @@ app.delete('/usuario/:id', function(req, res) {
 
 
 /*
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', verificaToken, (req, res) => {
 
     let id = req.params.id;
 
@@ -197,3 +207,25 @@ app.delete('/usuario/:id', function(req, res) {
 });*/
 
 module.exports = app;
+
+//** PRUEBA PARA SABER SI FUNCIONA - verificaADMIN_ROLE */
+
+// if (req.usuario.role === 'USER_ROLE') {
+//     return res.json({
+//         mensaje: 'es un user role'
+//     });
+// } else {
+//     if (req.usuario.role === 'ADMIN_ROLE') {
+//         return res.json({
+//             mensaje: 'es un admin role'
+//         });
+//     }
+// }
+
+
+//** PRUEBA PARA SABER SI FUNCIONA - verificaTOKEN */
+
+// esto unicamente se observa si el toke que viene en los headers es valido
+// return res.json({
+//     mensaje: 'funciona'
+// })

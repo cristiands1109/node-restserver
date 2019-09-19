@@ -43,6 +43,8 @@ let usuarioSchema = new Schema({
     }
 });
 
+
+// exclusion de la contrasena para que no se muestre
 usuarioSchema.methods.toJSON = function() {
 
     let user = this;
