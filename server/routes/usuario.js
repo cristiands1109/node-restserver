@@ -132,7 +132,7 @@ app.put('/usuario/:id', [verificaToken, verificaADMIN_ROLE], (req, res) => {
 //====================ELIMINAR UN USUARIO DE BD======================//
 //===================================================================//
 
-app.delete('/usuario/:id', verificaToken, (req, res) => {
+app.delete('/usuario/:id', [verificaToken, verificaADMIN_ROLE], (req, res) => {
 
     let id = req.params.id;
     let cambiarEstado = {
